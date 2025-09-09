@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Editar Cliente</h2>
+<form method="post" action="{{ url_for('clientes_editar', id=cliente.id) }}">
+   <label for="name" style="font-weight: bold; font-size: 12px;">DROGUERIA</label>
+  <input class="form-control mb-2" name="nombre" value="{{ cliente.nombre }}" required>
+   <label for="name" style="font-weight: bold; font-size: 12px;">DIRECCIÓN</label>
+  <input class="form-control mb-2" name="direccion" value="{{ cliente.direccion }}">
+  <button class="btn btn-success">Guardar</button>
+  <a href="{{ url_for('clientes') }}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}

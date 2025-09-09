@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Vista previa pedido</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="container py-4">
+  <div class="d-flex justify-content-between align-items-center">
+    <h1>Vista previa del pedido</h1>
+    <a href="{{ url_for('index') }}" class="btn btn-secondary">⬅ Volver al inicio</a>
+  </div>
+
+  <h4 class="mt-3">Cliente</h4>
+  <p class="mb-1"><strong>{{ pedido.cliente.nombre }}</strong></p>
+  {% if pedido.cliente.direccion %}<p class="mb-1">Dirección: {{ pedido.cliente.direccion }}</p>{% endif %}
+  {% if pedido.cliente.telefono %}<p class="mb-1">Teléfono: {{ pedido.cliente.telefono }}</p>{% endif %}
+  {% if pedido.cliente.correo %}<p class="mb-3">Correo: {{ pedido.cliente.correo }}</p>{% endif %}
+
+  <h4>Productos</h4>
+  <table class="table table-bordered">
+    <thead class="table-dark">
+      <tr><th>Producto</th><th>Laboratorio</th><th>Cant.</th><th>Precio</th><th>Subtotal</th></tr>
+    </thead>
+    <tbody>
+      {% for it in pedido.items %}
+      <tr>
+        <td>{{ it.nombre }}</td>
+        <td>{{ it.laboratorio }}</td>
+        <td class="text-center">{{ it.cantidad }}</td>
+        <td class="text-end">${{ '%.2f'|format(it.precio) }}</td>
+        <td class="text-end">${{ '%.2f'|format(it.subtotal) }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+    <tfoot>
+      <tr>
+        <th colspan="4" class="text-end">TOTAL</th>
+        <th class="text-end">${{ '%.2f'|format(pedido.total) }}</th>
+      </tr>
+    </tfoot>
+  </table>
+
+  <div class="d-flex gap-2 mt-3">
+    <a href="{{ url_for('pedido_pdf') }}" class="btn btn-outline-primary">⬇ Descargar PDF</a>
+    <form method="post" action="{{ url_for('pedido_confirm') }}">
+      <button class="btn btn-success">✅ Confirmar y Guardar (descuenta stock)</button>
+    </form>
+    <a href="{{ url_for('pedido') }}" class="btn btn-secondary">⬅ Volver al pedido</a>
+  </div>
+</body>
+</html>

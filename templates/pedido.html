@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>📝 Crear Pedido</h2>
+
+<form method="post">
+  <div class="mb-3">
+    <label class="form-label">Cliente</label>
+    <select class="form-control" name="cliente" required>
+      {% for c in clientes %}
+      <option value="{{ c.id }}">{{ c.nombre }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <h4>Productos</h4>
+  {% for p in productos %}
+  <div class="row mb-2">
+    <div class="col-md-5">
+      <input type="checkbox" name="producto" value="{{ p.id }}"> {{ p.nombre }} (Stock: {{ p.stock }})
+    </div>
+    <div class="col-md-3">
+      <input type="number" class="form-control" name="cantidad_{{ p.id }}" placeholder="Cantidad">
+    </div>
+  </div>
+  {% endfor %}
+
+  <button class="btn btn-success mt-3">💾 Guardar Pedido</button>
+  <a href="{{ url_for('index') }}" class="btn btn-secondary mt-3">⬅ Cancelar</a>
+</form>
+{% endblock %}

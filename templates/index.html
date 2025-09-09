@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex gap-3">
+  <a href="{{ url_for('clientes') }}" class="btn btn-primary">👥 Clientes</a>
+  <a href="{{ url_for('productos') }}" class="btn btn-success">📦 Productos</a>
+  <a href="{{ url_for('crear_pedido') }}" class="btn btn-warning">📝 Crear Pedido</a>
+</div>
+{% endblock %}

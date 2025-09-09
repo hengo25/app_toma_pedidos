@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Clientes</h2>
+<form method="post" action="{{ url_for('clientes_nuevo') }}" class="row g-2 mb-3">
+  <div class="col"><input class="form-control" name="nombre" placeholder="Nombre" required></div>
+  <div class="col"><input class="form-control" name="direccion" placeholder="Dirección"></div>
+  <div class="col-auto"><button class="btn btn-primary">Agregar</button></div>
+</form>
+
+<table class="table table-striped">
+  <thead><tr><th>Nombre</th><th>Dirección</th><th>Acciones</th></tr></thead>
+  <tbody>
+    {% for c in clientes %}
+    <tr>
+      <td>{{ c.nombre }}</td>
+      <td>{{ c.direccion or '' }}</td>
+      <td>
+        <a href="{{ url_for('clientes_editar', id=c.id) }}" class="btn btn-sm btn-primary">Editar</a>
+        <a href="{{ url_for('clientes_eliminar', id=c.id) }}" class="btn btn-sm btn-danger" onclick="return confirm('Eliminar?')">Eliminar</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<nav>
+  <ul class="pagination">
+    {% for p in range(1, pages+1) %}
+      <li class="page-item {% if p == page %}active{% endif %}">
+        <a class="page-link" href="{{ url_for('clientes', page=p) }}">{{ p }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+</nav>
+{% endblock %}
+

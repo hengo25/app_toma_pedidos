@@ -1,0 +1,12 @@
+body { font-family: Arial; margin: 40px; }
+input, button { margin: 5px; }
+li { margin-bottom: 8px; }
+button { margin-left: 10px; }
+
+#cart_list li {
+  margin-bottom: 0.5rem;
+}
+.delete {
+  margin-left: 1rem;
+}
+
