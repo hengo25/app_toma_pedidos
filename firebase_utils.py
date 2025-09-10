@@ -1,18 +1,30 @@
 import os
+import json
 from datetime import datetime
 import firebase_admin
 from firebase_admin import credentials, firestore
 
-CRED_FILE = os.path.join(os.getcwd(), "credenciales.json")
-if not os.path.exists(CRED_FILE):
-    raise FileNotFoundError(f"No encontré 'credenciales.json' en {os.getcwd()}")
+# Leer credenciales desde variable de entorno
+credenciales_json = os.environ.get("FIREBASE_CREDENTIALS")
 
+if not credenciales_json:
+    raise FileNotFoundError("No encontré la variable de entorno FIREBASE_CREDENTIALS en Render")
+
+# Convertir string JSON en diccionario
+cred_dict = json.loads(credenciales_json)
+
+# Inicializar Firebase solo si no está inicializado
 if not firebase_admin._apps:
-    cred = credentials.Certificate(CRED_FILE)
+    cred = credentials.Certificate(cred_dict)
     firebase_admin.initialize_app(cred)
 
+# Cliente de Firestore
 db = firestore.client()
 
+
+# ----------------------------
+# Funciones auxiliares
+# ----------------------------
 def _normalize_product(d: dict):
     if "precio" in d:
         try:
@@ -26,11 +38,15 @@ def _normalize_product(d: dict):
             d["stock"] = 0
     return d
 
+
+# ----------------------------
 # CRUD genérico
+# ----------------------------
 def add(collection: str, data: dict):
     ref = db.collection(collection).document()
     ref.set(data)
     return ref.id
+
 
 def get_all(collection: str):
     """
@@ -47,6 +63,7 @@ def get_all(collection: str):
         out.append(obj)
     return out
 
+
 def get_doc(collection: str, doc_id: str):
     doc = db.collection(collection).document(doc_id).get()
     if not doc.exists:
@@ -57,13 +74,18 @@ def get_doc(collection: str, doc_id: str):
         obj = _normalize_product(obj)
     return obj
 
+
 def update(collection: str, doc_id: str, data: dict):
     db.collection(collection).document(doc_id).update(data)
+
 
 def delete(collection: str, doc_id: str):
     db.collection(collection).document(doc_id).delete()
 
+
+# ----------------------------
 # Pedidos
+# ----------------------------
 def guardar_pedido(cliente_id: str, cliente_data: dict, items: list, total: float):
     """
     Guarda un pedido con datos del cliente, items y total.
@@ -78,6 +100,7 @@ def guardar_pedido(cliente_id: str, cliente_data: dict, items: list, total: floa
     }
     doc_ref.set(payload)
     return doc_ref.id
+
 
 def descontar_inventario(items: list):
     """
@@ -95,3 +118,7 @@ def descontar_inventario(items: list):
         current = int(data.get("stock", 0))
         new_stock = max(0, current - cant)
         ref.update({"stock": new_stock})
+
+
+
+
