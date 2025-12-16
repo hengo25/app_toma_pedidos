@@ -71,13 +71,9 @@ def index():
 def clientes():
     page = request.args.get("page", 1, type=int)
     per_page = 10
-    load = request.args.get("load", 0, type=init)
-    if load ==1:
-           data = fu.get_all("clientes", limit=50)
-    else:
-        data =[]
+    data =[]
     total = len(data)
-    pages = (total + per_page - 1) // per_page
+    pages = max(1, math.ceil(total / per_page) // per_page
     start = (page - 1) * per_page
     end = start + per_page
     return render_template("clientes.html", clientes=data[start:end], page=page, pages=pages)
@@ -271,6 +267,7 @@ def guardar_pedido():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
 
 
 
