@@ -73,7 +73,7 @@ def clientes():
     per_page = 10
     data =[]
     total = len(data)
-    pages = max(1, math.ceil(total / per_page) // per_page
+    pages = max(1, math.ceil(total / per_page)) // per_page
     start = (page - 1) * per_page
     end = start + per_page
     return render_template("clientes.html", clientes=data[start:end], page=page, pages=pages)
@@ -267,6 +267,7 @@ def guardar_pedido():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
 
 
 
