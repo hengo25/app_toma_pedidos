@@ -53,7 +53,7 @@ def get_all(collection: str, limit: int = 50):
     Obtiene todos los documentos de la colección.
     Para productos aplica normalización de precio y stock.
     """
-    docs = db.collection(collection).order_by("nombre").stream()
+    docs = db.collection(collection).order_by("nombre").limit(50).stream()
     out = []
     for d in docs:
         obj = d.to_dict()
@@ -118,6 +118,7 @@ def descontar_inventario(items: list):
         current = int(data.get("stock", 0))
         new_stock = max(0, current - cant)
         ref.update({"stock": new_stock})
+
 
 
 
