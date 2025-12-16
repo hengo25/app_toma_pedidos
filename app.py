@@ -6,6 +6,7 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, 
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 import firebase_utils as fu
+import math
 
 app = Flask(__name__)
 app.secret_key = "dev-secret"
@@ -267,6 +268,7 @@ def guardar_pedido():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
 
 
 
