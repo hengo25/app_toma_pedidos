@@ -6,7 +6,7 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, 
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 import firebase_utils as fu
-import math
+
 
 app = Flask(__name__)
 app.secret_key = "dev-secret"
@@ -72,9 +72,9 @@ def index():
 def clientes():
     page = request.args.get("page", 1, type=int)
     per_page = 10
-    data =[]
+    data = fu.get_all("clientes")
     total = len(data)
-    pages = max(1, math.ceil(total / per_page)) // per_page
+    pages = (total + per_page - 1) // per_page
     start = (page - 1) * per_page
     end = start + per_page
     return render_template("clientes.html", clientes=data[start:end], page=page, pages=pages)
@@ -268,6 +268,7 @@ def guardar_pedido():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
 
 
 
