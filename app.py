@@ -119,7 +119,7 @@ def clientes_eliminar(id):
 @app.route("/productos")
 def productos():
     page = request.args.get("page", 1, type=int)
-    per_page = 30
+    per_page = 20
     data = fu.get_all("productos")
     total = len(data)
     pages = (total + per_page - 1) // per_page
@@ -268,6 +268,7 @@ def guardar_pedido():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
 
 
 
