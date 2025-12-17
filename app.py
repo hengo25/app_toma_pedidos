@@ -179,35 +179,30 @@ def crear_pedido():
     search = request.args.get("search", "", type=str).strip()
     per_page = PER_PAGE
 
-    clientes_all = fu.get_all("clientes") or []
-    productos_all = fu.get_all("productos") or []
-
-    # 🔍 DEBUG temporal (Render logs)
-    print("CLIENTES:", len(clientes_all))
-    print("PRODUCTOS:", len(productos_all))
+    clientes_all = fu.get_all("clientes")
+    productos_all = fu.get_all("productos")
 
     if search:
-        productos_all = [
-            p for p in productos_all
-            if search.lower() in p.get("nombre", "").lower()
-        ]
+        productos_all = [p for p in productos_all if search.lower() in p.get("nombre", "").lower()]
 
+    # NOTE: enviamos productos_all a la plantilla para que el <select> muestre TODOS los productos,
+    # mientras que las variables de paginación siguen calculadas sobre productos_all
     total = len(productos_all)
-    pages = (total + per_page - 1) // per_page if total > 0 else 1
-
+    pages = (total + per_page - 1) // per_page
     start = (page - 1) * per_page
     end = start + per_page
     productos_page = productos_all[start:end]
 
-    return render_template(
-        "crear_pedido.html",
-        clientes=clientes_all,      # 👈 CLIENTES
-        productos=productos_page,   # 👈 PRODUCTOS (PAGINADOS)
-        page=page,
-        pages=pages,
-        total=total,
-        search=search
-    )
+    return render_template("crear_pedido.html",
+                           clientes=clientes_all,
+                           productos=productos_all,   # <-- todos los productos (para el select)
+                           productos_page=productos_page,  # opcional: si quieres mostrar una lista paginada en la UI
+                           page=page,
+                           pages=pages,
+                           per_page=per_page,
+                           total=total,
+                           search=search)
+
 
 @app.route("/guardar_pedido", methods=["POST"])
 def guardar_pedido():
@@ -273,6 +268,7 @@ def guardar_pedido():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
 
 
 
