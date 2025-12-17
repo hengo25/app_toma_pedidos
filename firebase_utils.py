@@ -50,10 +50,10 @@ def add(collection: str, data: dict):
 def get_all(collection: str):
     """
     Obtiene TODOS los documentos de la colección.
-    La paginación se hace en Flask, NO en Firebase.
+    Ordena alfabéticamente por nombre en Python.
     """
     try:
-        docs = db.collection(collection).stream()  # 👈 SIN order_by NI limit
+        docs = db.collection(collection).stream()
         out = []
         for d in docs:
             obj = d.to_dict()
@@ -61,11 +61,14 @@ def get_all(collection: str):
             if collection == "productos":
                 obj = _normalize_product(obj)
             out.append(obj)
+
+        # 🔤 ORDEN ALFABÉTICO SEGURO
+        out.sort(key=lambda x: x.get("nombre", "").lower())
+
         return out
     except Exception as e:
         print("🔥 ERROR get_all:", collection, e)
         return []
-
 
 def get_doc(collection: str, doc_id: str):
     doc = db.collection(collection).document(doc_id).get()
@@ -121,6 +124,7 @@ def descontar_inventario(items: list):
         current = int(data.get("stock", 0))
         new_stock = max(0, current - cant)
         ref.update({"stock": new_stock})
+
 
 
 
