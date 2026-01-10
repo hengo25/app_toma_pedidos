@@ -23,7 +23,7 @@ def generar_pdf(path, cliente, items, total):
     styles = getSampleStyleSheet()
     elems = []
 
-    elems.append(Paragraph("Factura / Pedido", styles["Title"]))
+    elems.append(Paragraph("PEDIDO", styles["Title"]))
     elems.append(Spacer(1, 8))
     elems.append(Paragraph(f"Cliente: {cliente.get('nombre','')}", styles["Normal"]))
     if cliente.get("direccion"):
@@ -256,7 +256,8 @@ def guardar_pedido():
     pedido_id = fu.guardar_pedido(cliente_id, cliente, items, total)
     fu.descontar_inventario(descontar)
 
-    pdf_name = f"pedido_{pedido_id}.pdf"
+    cliente_archivo = cliente.get("nombre", "PEDIDO").replace(" ", "_").upper()
+    pdf_name = f"{cliente_archivo}.pdf"
     pdf_path = os.path.join(STATIC_DIR, pdf_name)
     try:
         generar_pdf(pdf_path, cliente, items, total)
@@ -268,6 +269,7 @@ def guardar_pedido():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
 
 
 
